@@ -38,6 +38,9 @@ public class Player: NSObject, EventListener {
     /// 重试事件发生器
     let retryEventProducer = RetryEventProducer()
 
+    /// 边下边播 resource loader 实现
+    let resourceLoader = ResourceLoader()
+
     // MARK: Player
 
     /// 播放队列
@@ -71,18 +74,15 @@ public class Player: NSObject, EventListener {
             if let currentItem = currentItem {
                 // Stops the current player
                 player?.rate = 0
-
                 // Ensures the audio session got started.
                 do {
                     try audioSession.setActive(true)
                 } catch {
                     delegate?.player(self, setAudioSessionErrorOccured: error)
                 }
-
                 // Sets new state
                 let info = currentItem.url(for: currentQuality)
                 guard let resource = info.resource else { return }
-
                 if reachability.isReachable() || resource.resourceURL.isOfflineURL {
                     state = .buffering
                 } else {
@@ -90,35 +90,46 @@ public class Player: NSObject, EventListener {
                     state = .waitingForConnection
                     return
                 }
-
                 // Reset special state flags.
                 pausedForInterruption = false
-                let playerItem: AVPlayerItem
-                if let data = currentItem.data { // pre-load
-                    playerItem = AVPlayerItem(asset: data)
-                    if let currentItemDuration = currentItemDuration, currentItemDuration > 0 {
-                        delegate?.player(self, didFindDuration: currentItemDuration, for: currentItem)
-                    }
+
+                let resourceURL = resource.resourceURL
+                let asset: AVURLAsset
+                if resourceURL.isFileURL { // local file
+                    asset = AVURLAsset(url: resourceURL)
                 } else {
-                    let asset = AVAsset(url: resource.resourceURL)
-                    playerItem = AVPlayerItem(asset: asset)
+                    // custom scheme
+                    asset = AVURLAsset(url: CacheURLUtil.convertToCustom(resourceURL))
+                    asset.resourceLoader.setDelegate(resourceLoader, queue: resourceLoader.loaderQueue)
                 }
-                playerItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithm(
-                    rawValue: audioTimePitchAlgorithm.rawValue
-                )
-                playerItem.preferredForwardBufferDuration = preferredForwardBufferDuration
+                let keys = ["playable", "tracks"]
+                asset.loadValuesAsynchronously(forKeys: keys) { [weak self] in
+                    guard let self = self else { return }
+                    for key in keys {
+                        if case .failed = asset.statusOfValue(forKey: key, error: nil) {
+                            return
+                        }
+                    }
+                    if let currentItemDuration = self.currentItemDuration, currentItemDuration > 0 {
+                        self.delegate?.player(self, didFindDuration: currentItemDuration, for: currentItem)
+                    }
+                    let playerItem = AVPlayerItem(asset: asset)
+                    playerItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithm(
+                        rawValue: self.audioTimePitchAlgorithm.rawValue
+                    )
+                    playerItem.preferredForwardBufferDuration = self.preferredForwardBufferDuration
+                    self.avPlayerItem = playerItem
 
-                avPlayerItem = playerItem
+                    self.currentQuality = info.quality
+                    // 更新控制中心播放信息
+                    self.updateNowPlayingInfoCenter()
 
-                currentQuality = info.quality
-                // 更新控制中心播放信息
-                updateNowPlayingInfoCenter()
-
-                // Calls delegate
-                if oldValue != currentItem {
-                    delegate?.player(self, willStartPlaying: currentItem)
+                    // Calls delegate
+                    if oldValue != currentItem {
+                        self.delegate?.player(self, willStartPlaying: currentItem)
+                    }
+                    self.player?.rate = self.rate
                 }
-                player?.rate = rate
             } else {
                 stop()
             }
@@ -315,6 +326,7 @@ public class Player: NSObject, EventListener {
         }
     }
 
+    /// 当前播放资源的质量
     public internal(set) var currentQuality: PlayableQuality
 
     /// remote command options
@@ -379,29 +391,6 @@ public class Player: NSObject, EventListener {
             options: options,
             notifyOthersOnDeactivation: notifyOthersOnDeactivation
         )
-    }
-
-    /// Preload specified `PlayableItme`
-    public func preload(item: PlayableItem) {
-        if item.data != nil {
-            return
-        }
-
-        let info = item.url(for: currentQuality)
-        guard let resource = info.resource else { return }
-
-        let asset = AVURLAsset(url: resource.resourceURL)
-        let keys = ["playable", "tracks"]
-        asset.loadValuesAsynchronously(forKeys: keys) {
-            for key in keys {
-                if case .failed = asset.statusOfValue(forKey: key, error: nil) {
-                    return
-                }
-            }
-            DispatchQueue.main.safeAsync {
-                item.data = asset
-            }
-        }
     }
 
     /// 对于 `EventListener` 的实现，处理多种事件的监听

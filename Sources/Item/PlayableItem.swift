@@ -10,7 +10,6 @@ import MediaPlayer
 import UIKit
 
 public class PlayableItem: NSObject, Playable {
-
     public let itemResources: [PlayableQuality: ResourceConvertible]
 
     @objc
@@ -30,9 +29,6 @@ public class PlayableItem: NSObject, Playable {
 
     @objc
     public dynamic var artwork: MPMediaItemArtwork?
-
-    @objc
-    public dynamic var data: AVAsset?
 
     public var artworkImageSize: CGSize?
 
@@ -54,5 +50,4 @@ public class PlayableItem: NSObject, Playable {
     public subscript(_ quality: PlayableQuality) -> ResourceConvertible? {
         itemResources[quality]
     }
-
 }

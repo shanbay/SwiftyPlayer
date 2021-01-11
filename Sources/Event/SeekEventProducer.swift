@@ -13,7 +13,6 @@ extension Selector {
 
 /// `SeekEvent` generate from `SeekEventProducer`
 class SeekEventProducer: EventProducer {
-
     /// `SeekEvent` 
     ///
     /// - backward: The event describes a seek backward in time.
@@ -78,5 +77,4 @@ class SeekEventProducer: EventProducer {
         eventListener?.onEvent(event, generateBy: self)
         restartTimer()
     }
-
 }

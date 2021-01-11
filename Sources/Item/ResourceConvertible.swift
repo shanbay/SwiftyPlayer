@@ -9,7 +9,6 @@ import Foundation
 
 /// Represents an media resource at a certain url and a given file name.
 public protocol ResourceConvertible {
-
     /// The target media url.
     var resourceURL: URL { get }
 
@@ -27,7 +26,6 @@ extension URL: ResourceConvertible {
 
 /// Resource is a simple combination of `resourceURL` and `fileName`.
 public struct MediaResource: ResourceConvertible {
-
     /// Creates an media resource.
     ///
     /// - Parameters:
@@ -44,5 +42,4 @@ public struct MediaResource: ResourceConvertible {
 
     /// The target media url.
     public let fileName: String
-
 }

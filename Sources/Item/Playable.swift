@@ -11,7 +11,6 @@ import UIKit
 
 /// `PlayableQuality`
 public struct PlayableQuality: Hashable, Equatable, RawRepresentable {
-
     public let rawValue: UInt
 
     public init(_ rawValue: UInt) {
@@ -24,19 +23,16 @@ public struct PlayableQuality: Hashable, Equatable, RawRepresentable {
 }
 
 extension PlayableQuality {
-
     public static let low = PlayableQuality(rawValue: 0)
 
     public static let medium = PlayableQuality(rawValue: 500)
 
     public static let high = PlayableQuality(rawValue: 999)
-
 }
 
 public typealias ItemResource = (quality: PlayableQuality, resource: ResourceConvertible?)
 
 public protocol Playable: AnyObject, Equatable {
-
     var itemResources: [PlayableQuality: ResourceConvertible] { get }
 
     // MARK: Additional properties
@@ -79,11 +75,9 @@ public protocol Playable: AnyObject, Equatable {
     init?(itemResources: [PlayableQuality: ResourceConvertible])
 
     func url(for quality: PlayableQuality) -> ItemResource
-
 }
 
 extension Playable {
-
     public var artworkImage: UIImage? {
         get {
             artwork?.image(at: artworkImageSize ?? CGSize(width: 512, height: 512))
@@ -131,5 +125,4 @@ extension Playable {
             lhs.itemResources[$0]?.fileName == rhs.itemResources[$0]?.fileName
         }
     }
-
 }
