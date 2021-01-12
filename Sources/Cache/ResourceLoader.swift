@@ -47,55 +47,61 @@ extension ResourceLoader: AVAssetResourceLoaderDelegate {
         let url = CacheURLUtil.convertToOriginal(requestURL)
         let fileName = url.lastPathComponent
 
-        // read from cache first
-        // if key = filename exists
-        // return value
+        let status = PlayerCache.read(name: fileName)
+        switch status {
+        case .allCompleted(let data):
+            // 全部下载完成
+//            loadingRequest.dataRequest?.respond(with: <#T##Data#>)
+            loadingRequest.finishLoading()
+            return false
+        case .tmp(let dict):
+            // 文件没有全部下载完成
+            let loadingRequestExist = loadingRequests.contains { $0.loadingRequest == loadingRequest }
+            if !loadingRequestExist {
+                if loadingRequest.contentInformationRequest != nil { // 请求 content info
+                    var request = URLRequest(url: url)
+                    if let dataRequest = loadingRequest.dataRequest {
+                        let lowerBound = Int(dataRequest.requestedOffset)
+                        let upperBound = lowerBound + Int(dataRequest.requestedLength) - 1
+                        let rangeHeader = String(format: "bytes=%lld-%lld", lowerBound, upperBound)
+                        request.setValue(rangeHeader, forHTTPHeaderField: "Range")
+                    }
+                    request.httpMethod = "HEAD" // use "HEAD", fetch content-length/content-type ie.
 
-        let loadingRequestExist = loadingRequests.contains { $0.loadingRequest == loadingRequest }
-        if !loadingRequestExist {
-            if loadingRequest.contentInformationRequest != nil {
-                var request = URLRequest(url: url)
-                if let dataRequest = loadingRequest.dataRequest {
-                    let lowerBound = Int(dataRequest.requestedOffset)
-                    let upperBound = lowerBound + Int(dataRequest.requestedLength) - 1
+                    let dataTask = session.dataTask(with: request)
+                    loadingRequests.append(
+                        ResourceLoaderRequest(
+                            loadingRequest: loadingRequest,
+                            dataTask: dataTask,
+                            requestType: .contentInfo
+                        )
+                    )
+                    dataTask.resume()
+                    return true
+                } else if let dataRequest = loadingRequest.dataRequest { // 请求"实际"音视频数据
+                    var request = URLRequest(url: url)
+
+                    let lowerBound = dataRequest.requestedOffset
+                    let length = Int64(dataRequest.requestedLength)
+                    let upperBound = lowerBound + length
                     let rangeHeader = String(format: "bytes=%lld-%lld", lowerBound, upperBound)
                     request.setValue(rangeHeader, forHTTPHeaderField: "Range")
+
+                    let dataTask = session.dataTask(with: request)
+                    loadingRequests.append(
+                        ResourceLoaderRequest(
+                            loadingRequest: loadingRequest,
+                            dataTask: dataTask,
+                            requestType: .dataRequest
+                        )
+                    )
+                    dataTask.resume()
+                    return true
                 }
-                request.httpMethod = "HEAD" // use "HEAD", fetch content-length/content-type ie.
-
-                let dataTask = session.dataTask(with: request)
-                loadingRequests.append(
-                    ResourceLoaderRequest(
-                        loadingRequest: loadingRequest,
-                        dataTask: dataTask,
-                        requestType: .contentInfo
-                    )
-                )
-                dataTask.resume()
-                return true
-            } else if let dataRequest = loadingRequest.dataRequest {
-                var request = URLRequest(url: url)
-
-                let lowerBound = dataRequest.requestedOffset
-                let length = Int64(dataRequest.requestedLength)
-                let upperBound = lowerBound + length
-                let rangeHeader = String(format: "bytes=%lld-%lld", lowerBound, upperBound)
-                request.setValue(rangeHeader, forHTTPHeaderField: "Range")
-
-                let dataTask = session.dataTask(with: request)
-                loadingRequests.append(
-                    ResourceLoaderRequest(
-                        loadingRequest: loadingRequest,
-                        dataTask: dataTask,
-                        requestType: .dataRequest
-                    )
-                )
-                dataTask.resume()
-                return true
             }
-        }
 
-        return false
+            return false
+        }
     }
 
     func resourceLoader(
@@ -117,9 +123,7 @@ extension ResourceLoader: AVAssetResourceLoaderDelegate {
 extension ResourceLoader: URLSessionDataDelegate {
     private func saveDataToCache(resourceLoaderRequest: ResourceLoaderRequest) {
         if let fileName = resourceLoaderRequest.loadingRequest.request.url?.lastPathComponent {
-            // read cache key = fileName
-            // update cache data
-            // save data to cache as fileName
+            PlayerCache.saveData(name: fileName, resourceLoaderRequest: resourceLoaderRequest)
         }
     }
 
