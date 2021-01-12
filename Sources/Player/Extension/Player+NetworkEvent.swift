@@ -6,7 +6,6 @@
 //
 
 extension Player {
-
     /// 处理网络事件
     ///
     /// - Parameters:
@@ -48,5 +47,4 @@ extension Player {
             break
         }
     }
-
 }

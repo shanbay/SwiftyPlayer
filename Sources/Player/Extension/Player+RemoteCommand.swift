@@ -9,13 +9,11 @@ import AVFoundation
 import MediaPlayer
 
 public struct RemoteCommandOptions: OptionSet, Hashable {
-
     public let rawValue: UInt
 
     public init(rawValue: UInt) {
         self.rawValue = rawValue
     }
-
 }
 
 extension RemoteCommandOptions {

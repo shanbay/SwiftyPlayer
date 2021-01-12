@@ -6,7 +6,6 @@
 //
 
 extension Player {
-
     /// 当前播放 item 事件
     ///
     /// - Parameters:
@@ -18,5 +17,4 @@ extension Player {
     ) {
         updateNowPlayingInfoCenter()
     }
-
 }

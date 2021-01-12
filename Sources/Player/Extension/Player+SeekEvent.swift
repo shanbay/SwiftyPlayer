@@ -8,7 +8,6 @@
 import Foundation
 
 extension Player {
-
     /// 处理 seek 事件
     ///
     /// - Parameters:
@@ -26,5 +25,4 @@ extension Player {
             seek(to: currentItemProgression + delta)
         }
     }
-
 }

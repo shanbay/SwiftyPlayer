@@ -23,7 +23,7 @@ extension PlayerAudioTimePitchAlgorithm {
         rawValue: AVAudioTimePitchAlgorithm.lowQualityZeroLatency.rawValue
     )
 
-    /// 质量适中，计算成本低，使用于短声音
+    /// 质量适中，计算成本低，适用于短声音
     ///
     /// SwiftyPlayer 中的默认
     public static let timeDomain = PlayerAudioTimePitchAlgorithm(
@@ -35,7 +35,7 @@ extension PlayerAudioTimePitchAlgorithm {
         rawValue: AVAudioTimePitchAlgorithm.spectral.rawValue
     )
 
-    /// 高质量，无音高校正，音高随速率变化（用这个，快进会高音、慢进会低音）
+    /// 高质量，无音高校正，音高随速率变化（使用这个，快进会高音、慢进会低音）
     public static let varispeed = PlayerAudioTimePitchAlgorithm(
         rawValue: AVAudioTimePitchAlgorithm.varispeed.rawValue
     )

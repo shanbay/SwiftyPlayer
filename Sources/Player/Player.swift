@@ -10,7 +10,6 @@ import MediaPlayer
 
 /// `Player` 实例用于播放 `PlayableItem`.
 public class Player: NSObject, EventListener {
-
     // MARK: Handlers
 
     /// 网络状态监听
@@ -413,13 +412,11 @@ public class Player: NSObject, EventListener {
             handleSeekEvent(from: eventProducer, with: event)
         }
     }
-
 }
 
 // MARK: Utility methods
 
 extension Player {
-
     /// 更新当前播放 item 的`MPNowPlayingInfoCenter`信息
     func updateNowPlayingInfoCenter() {
         if let item = currentItem {

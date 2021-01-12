@@ -15,11 +15,12 @@ struct ResourceLoaderRequest: Hashable {
     var loadingRequest: AVAssetResourceLoadingRequest
     var dataTask: URLSessionDataTask
     var response: URLResponse?
-    var requestType: RequestType
+
     enum RequestType {
         case contentInfo
         case dataRequest
     }
+    var requestType: RequestType
 }
 
 class ResourceLoader: NSObject {
@@ -57,9 +58,10 @@ extension ResourceLoader: AVAssetResourceLoaderDelegate {
                 if let dataRequest = loadingRequest.dataRequest {
                     let lowerBound = Int(dataRequest.requestedOffset)
                     let upperBound = lowerBound + Int(dataRequest.requestedLength) - 1
-                    let rangeHeader = "bytes=\(lowerBound)-\(upperBound)"
+                    let rangeHeader = String(format: "bytes=%lld-%lld", lowerBound, upperBound)
                     request.setValue(rangeHeader, forHTTPHeaderField: "Range")
                 }
+                request.httpMethod = "HEAD" // use "HEAD", fetch content-length/content-type ie.
 
                 let dataTask = session.dataTask(with: request)
                 loadingRequests.append(
@@ -77,7 +79,7 @@ extension ResourceLoader: AVAssetResourceLoaderDelegate {
                 let lowerBound = dataRequest.requestedOffset
                 let length = Int64(dataRequest.requestedLength)
                 let upperBound = lowerBound + length
-                let rangeHeader = "bytes=\(lowerBound)-\(upperBound)"
+                let rangeHeader = String(format: "bytes=%lld-%lld", lowerBound, upperBound)
                 request.setValue(rangeHeader, forHTTPHeaderField: "Range")
 
                 let dataTask = session.dataTask(with: request)
@@ -114,9 +116,11 @@ extension ResourceLoader: AVAssetResourceLoaderDelegate {
 
 extension ResourceLoader: URLSessionDataDelegate {
     private func saveDataToCache(resourceLoaderRequest: ResourceLoaderRequest) {
-        //read cache key = fileName
-        //update cache data
-        //save data to cache as fileName
+        if let fileName = resourceLoaderRequest.loadingRequest.request.url?.lastPathComponent {
+            // read cache key = fileName
+            // update cache data
+            // save data to cache as fileName
+        }
     }
 
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
@@ -139,8 +143,10 @@ extension ResourceLoader: URLSessionDataDelegate {
             let index = self.loadingRequests.firstIndex { $0.dataTask == dataTask }
             if let index = index {
                 self.loadingRequests[index].response = response
+                completionHandler(.allow)
+            } else {
+                completionHandler(.cancel)
             }
-            completionHandler(.allow)
         }
     }
 
@@ -160,43 +166,43 @@ extension ResourceLoader: URLSessionDataDelegate {
                 guard let response = self.loadingRequests[currentIndex].response as? HTTPURLResponse else {
                     return
                 }
-
-                if let rangeString = response.allHeaderFields["Content-Range"] as? String,
-                   let bytesString = rangeString.split(separator: "/").map({ String($0) }).last,
-                   let bytes = Int64(bytesString) {
+                let allStringHeader = response.allHeaderFields.compactMap { pair -> (key: String, value: Any)? in
+                    if let key = pair.key as? String {
+                        return (key: key, value: pair.value)
+                    }
+                    return nil
+                }
+                let headerFields: [String: Any] = Dictionary(allStringHeader) { $1 }
+                // content-length
+                let cotentLength = headerFields.first { $0.key.lowercased() == "content-length" }?.value
+                if let cotentLengthString = cotentLength as? String, let bytes = Int64(cotentLengthString) {
                     self.loadingRequests[currentIndex].loadingRequest.contentInformationRequest?.contentLength = bytes
                 }
 
-                if let mimeType = response.mimeType,
-                   let contentType = UTTypeCreatePreferredIdentifierForTag(
-                    kUTTagClassMIMEType,
-                    mimeType as CFString,
-                    nil
-                   )?.takeRetainedValue() {
+                if let mimeType = response.mimeType {
+                    let contentType = UTTypeCreatePreferredIdentifierForTag(
+                        kUTTagClassMIMEType,
+                        mimeType as CFString,
+                        nil
+                    )
                     self.loadingRequests[currentIndex]
                         .loadingRequest
                         .contentInformationRequest?
-                        .contentType = contentType as String
+                        .contentType = contentType?.takeRetainedValue() as String?
                 }
-
-                if let value = response.allHeaderFields["Accept-Ranges"] as? String,
-                   value == "bytes" {
-                    self.loadingRequests[currentIndex]
-                        .loadingRequest
-                        .contentInformationRequest?
-                        .isByteRangeAccessSupported = true
-                } else {
-                    self.loadingRequests[currentIndex]
-                        .loadingRequest
-                        .contentInformationRequest?
-                        .isByteRangeAccessSupported = false
+                // accept-range
+                let acceptRanges = headerFields.first { $0.key.lowercased() == "accept-range" }?.value
+                var isByteRangeAccessSupported = false
+                if let value = acceptRanges as? String, value == "bytes" {
+                    isByteRangeAccessSupported = true
                 }
+                self.loadingRequests[currentIndex]
+                    .loadingRequest
+                    .contentInformationRequest?
+                    .isByteRangeAccessSupported = isByteRangeAccessSupported
 
                 self.loadingRequests[currentIndex].loadingRequest.finishLoading()
-
-                if let fileName = self.loadingRequests[currentIndex].loadingRequest.request.url?.lastPathComponent {
-                    //save info to cache as fileName
-                }
+                self.saveDataToCache(resourceLoaderRequest: self.loadingRequests[currentIndex])
             } else if self.loadingRequests[currentIndex].requestType == .dataRequest {
                 self.loadingRequests[currentIndex].loadingRequest.finishLoading()
                 self.saveDataToCache(resourceLoaderRequest: self.loadingRequests[currentIndex])

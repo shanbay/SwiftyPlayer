@@ -14,7 +14,10 @@ let package = Package(
         ),
     ],
     dependencies: [
-
+        .package(
+            url: "https://github.com/pinterest/PINCache.git",
+            from: "3.0.3"
+        )
     ],
     targets: [
         .target(

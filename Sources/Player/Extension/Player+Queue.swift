@@ -79,5 +79,4 @@ extension Player {
     public func removeItem(at index: Int) {
         queue?.remove(at: index)
     }
-
 }

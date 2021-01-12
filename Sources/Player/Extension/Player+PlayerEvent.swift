@@ -8,7 +8,6 @@
 import CoreMedia
 
 extension Player {
-
     /// 处理播放器事件
     ///
     /// - Parameters:

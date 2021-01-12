@@ -10,6 +10,7 @@ import Foundation
 struct CacheURLUtil {
     static let customScheme = "streaming"
     static let originalScheme = "__originalScheme__"
+
     static func convertToCustom(_ url: URL) -> URL {
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
             return url

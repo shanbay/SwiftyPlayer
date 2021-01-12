@@ -8,7 +8,6 @@
 import Foundation
 
 extension VideoPlayer {
-
     /// 处理应用处于前后台状态事件
     ///
     /// - Parameters:
@@ -47,5 +46,4 @@ extension VideoPlayer {
             break
         }
     }
-
 }

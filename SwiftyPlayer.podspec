@@ -16,6 +16,7 @@ Pod::Spec.new do |spec|
   spec.swift_versions = '5.1'
 
   spec.source = { :git => "https://github.com/shanbay/SwiftyPlayer.git", :tag => "#{spec.version}" }
+  spec.dependency 'PINCache'
 
   spec.source_files = [
     'Sources/**/*.swift',

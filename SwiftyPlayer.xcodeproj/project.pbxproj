@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -17,6 +17,8 @@
 		C4CEA27F25AC43A10078FFB4 /* ResourceLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CEA27E25AC43A10078FFB4 /* ResourceLoader.swift */; };
 		C4CEA28425AC44EF0078FFB4 /* CacheURLUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CEA28325AC44EF0078FFB4 /* CacheURLUtil.swift */; };
 		C4CEA28C25AC46B90078FFB4 /* CacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CEA28B25AC46B90078FFB4 /* CacheTests.swift */; };
+		C4CEA29225AD7CE50078FFB4 /* PINCache in Frameworks */ = {isa = PBXBuildFile; productRef = C4CEA29125AD7CE50078FFB4 /* PINCache */; };
+		C4CEA29A25AD7D0E0078FFB4 /* PlayerCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CEA29925AD7D0E0078FFB4 /* PlayerCache.swift */; };
 		C4E9367D254157F9002C982D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E9367C254157F9002C982D /* AppDelegate.swift */; };
 		C4E9367F254157F9002C982D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E9367E254157F9002C982D /* SceneDelegate.swift */; };
 		C4E93681254157F9002C982D /* JustVideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E93680254157F9002C982D /* JustVideoPlayerViewController.swift */; };
@@ -95,6 +97,7 @@
 		C4CEA27E25AC43A10078FFB4 /* ResourceLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceLoader.swift; sourceTree = "<group>"; };
 		C4CEA28325AC44EF0078FFB4 /* CacheURLUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheURLUtil.swift; sourceTree = "<group>"; };
 		C4CEA28B25AC46B90078FFB4 /* CacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheTests.swift; sourceTree = "<group>"; };
+		C4CEA29925AD7D0E0078FFB4 /* PlayerCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerCache.swift; sourceTree = "<group>"; };
 		C4E9366E254157E3002C982D /* SwiftyPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftyPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4E9367A254157F8002C982D /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4E9367C254157F9002C982D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -162,6 +165,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C4CEA29225AD7CE50078FFB4 /* PINCache in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -198,6 +202,7 @@
 			children = (
 				C4CEA27E25AC43A10078FFB4 /* ResourceLoader.swift */,
 				C4CEA28325AC44EF0078FFB4 /* CacheURLUtil.swift */,
+				C4CEA29925AD7D0E0078FFB4 /* PlayerCache.swift */,
 			);
 			path = Cache;
 			sourceTree = "<group>";
@@ -391,6 +396,9 @@
 			dependencies = (
 			);
 			name = SwiftyPlayer;
+			packageProductDependencies = (
+				C4CEA29125AD7CE50078FFB4 /* PINCache */,
+			);
 			productName = SwiftyPlayer;
 			productReference = C4E9366E254157E3002C982D /* SwiftyPlayer.framework */;
 			productType = "com.apple.product-type.framework";
@@ -460,6 +468,9 @@
 				Base,
 			);
 			mainGroup = C4E933CC25414C4F002C982D;
+			packageReferences = (
+				C4CEA29025AD7CE50078FFB4 /* XCRemoteSwiftPackageReference "PINCache" */,
+			);
 			productRefGroup = C4E933D925415028002C982D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -551,6 +562,7 @@
 				C4E9385A25427585002C982D /* Player+RemoteCommand.swift in Sources */,
 				C4E9384425427585002C982D /* PlayMode.swift in Sources */,
 				C4E9384025427585002C982D /* MPNowPlayingInfoCenter+PlayableItem.swift in Sources */,
+				C4CEA29A25AD7D0E0078FFB4 /* PlayerCache.swift in Sources */,
 				C4E9385F25427585002C982D /* VideoPlayer.swift in Sources */,
 				C4E9384E25427585002C982D /* RetryEventProducer.swift in Sources */,
 				C4E9385925427585002C982D /* Player+Queue.swift in Sources */,
@@ -1124,6 +1136,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C4CEA29025AD7CE50078FFB4 /* XCRemoteSwiftPackageReference "PINCache" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pinterest/PINCache.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C4CEA29125AD7CE50078FFB4 /* PINCache */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C4CEA29025AD7CE50078FFB4 /* XCRemoteSwiftPackageReference "PINCache" */;
+			productName = PINCache;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C4E933CD25414C4F002C982D /* Project object */;
 }

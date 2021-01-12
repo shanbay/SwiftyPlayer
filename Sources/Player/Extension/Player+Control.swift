@@ -10,7 +10,6 @@ import CoreMedia
 import UIKit
 
 extension Player {
-
     /// 播放继续
     public func resume() {
         // Ensure pause flag is no longer set
@@ -183,11 +182,9 @@ extension Player {
         let position = max(range.earliest, range.latest - padding)
         seekSafely(to: position, completionHandler: completionHandler)
     }
-
 }
 
 extension Player {
-
     fileprivate func seekSafely(
         to time: TimeInterval,
         toleranceBefore: CMTime = CMTime.positiveInfinity,
@@ -218,5 +215,4 @@ extension Player {
             self?.updateNowPlayingInfoCenter()
         }
     }
-
 }
