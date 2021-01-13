@@ -13,7 +13,6 @@ extension Selector {
 
 /// `NetworkEventProducer` 在网络状态发生变化时发出 `NetworkEvent`
 class NetworkEventProducer: NSObject, EventProducer {
-
     /// `NetworkEvent` 是一个网络状态监听
     ///
     /// - networkChanged: 网络类型变更
@@ -101,5 +100,4 @@ class NetworkEventProducer: NSObject, EventProducer {
             lastStatus = newStatus
         }
     }
-
 }
