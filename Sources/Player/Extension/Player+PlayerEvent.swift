@@ -111,17 +111,14 @@ extension Player {
         if let error = error {
             state = .failed(.foundationError(error))
         } else if let currentItem = currentItem {
-            // 判断是否需要重置进度条
-            if case .pause(let seekToStart) = actionAtItemEnd {
-                if seekToStart { seek(to: 0) }
-            }
             // 播放完成回调
             delegate?.player(self, didEndedPlaying: currentItem)
-            // 判断是否需要自动播放下一个资源
-            if case .next = actionAtItemEnd {
+            
+            if case .pause(let seekToStart) = actionAtItemEnd { // 判断是否需要重置进度条
+                if seekToStart { seek(to: 0) }
+            } else if case .next = actionAtItemEnd { // 判断是否需要自动播放下一个资源
                 nextOrStop()
             }
         }
     }
-    
 }
