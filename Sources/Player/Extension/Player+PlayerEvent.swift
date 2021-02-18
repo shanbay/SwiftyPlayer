@@ -113,9 +113,8 @@ extension Player {
         } else if let currentItem = currentItem {
             // 播放完成回调
             delegate?.player(self, didEndedPlaying: currentItem)
-            
-            if case .pause(let seekToStart) = actionAtItemEnd { // 判断是否需要重置进度条
-                if seekToStart { seek(to: 0) }
+            if case .pause(let seekToStart) = actionAtItemEnd, seekToStart { // 判断是否需要重置进度条
+                seek(to: 0)
             } else if case .next = actionAtItemEnd { // 判断是否需要自动播放下一个资源
                 nextOrStop()
             }
