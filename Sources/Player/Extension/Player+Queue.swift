@@ -7,9 +7,9 @@
 
 extension Player {
 
-    public enum ActionAtItemEnd: Int {
+    public enum ActionAtItemEnd {
         case next
-        case pause
+        case pause(seekToStart: Bool = true)
     }
 
     /// 队列中的所有 item
