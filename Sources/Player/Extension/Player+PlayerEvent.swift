@@ -113,7 +113,7 @@ extension Player {
         } else if let currentItem = currentItem {
             switch actionAtItemEnd {
             case .pause(let seekToStart):
-                player?.pause() // 修改播放器状态为暂停
+                pause() // 修改播放器状态为暂停
                 if seekToStart {
                     seek(to: 0)
                 }
