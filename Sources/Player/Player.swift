@@ -259,7 +259,7 @@ public class Player: NSObject, EventListener {
     public var actionAtItemEnd: ActionAtItemEnd = .next
     
     /// player配置器
-    public var configurator: PlayerConfigurator = PlayerConfigurator.default
+    public var configurator: PlayerConfigurator = .default
 
     /// 定义了用户执行 seek 操作的行为
     ///
