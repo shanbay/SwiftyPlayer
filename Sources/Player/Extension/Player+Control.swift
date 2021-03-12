@@ -82,7 +82,8 @@ extension Player {
             queue = nil
         }
         state = .stopped
-        if !AVAudioSession.sharedInstance().isOtherAudioPlaying {
+        if !AVAudioSession.sharedInstance().isOtherAudioPlaying,
+           !configurator.manageAudioSessionExternal {
             do {
                 try audioSession.setActive(false)
             } catch {

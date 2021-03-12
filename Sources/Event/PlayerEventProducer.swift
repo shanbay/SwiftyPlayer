@@ -211,9 +211,18 @@ class PlayerEventProducer: NSObject, EventProducer {
                 guard let self = self else { return }
                 let duration = currentItem.duration
                 eventListener?.onEvent(PlayerEvent.loadedDuration(duration: duration), generateBy: self)
-
-                let metadata = currentItem.asset.metadata
-                eventListener?.onEvent(PlayerEvent.loadedMetadata(metadata: metadata), generateBy: self)
+                
+                let formatsKeys = "availableMetadataFormats"
+                currentItem.asset.loadValuesAsynchronously(forKeys: [formatsKeys]) {
+                    var error: NSError? = nil
+                    let status = currentItem.asset.statusOfValue(forKey: formatsKeys, error: &error)
+                    if status == .loaded {
+                        for format in currentItem.asset.availableMetadataFormats {
+                            let metadata = currentItem.asset.metadata(forFormat: format)
+                            eventListener?.onEvent(PlayerEvent.loadedMetadata(metadata: metadata), generateBy: self)
+                        }
+                    }
+                }
             }
         case .currentItemStatus:
             observation = player.observe(
