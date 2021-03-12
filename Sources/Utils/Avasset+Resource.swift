@@ -11,7 +11,7 @@ extension AVAsset {
     
     /// 异步获取metadata
     /// - Parameter loaded: 完成回调
-    func asyncMetaData(loaded: @escaping ([AVMetadataItem])->()) {
+    func asyncMetaData(loaded: @escaping ([AVMetadataItem]) -> (Void)) {
         let formatsKeys = "availableMetadataFormats"
         loadValuesAsynchronously(forKeys: [formatsKeys]) { [weak self] in
             guard let self = self else { return }
@@ -28,7 +28,7 @@ extension AVAsset {
     
     /// 异步获取duration
     /// - Parameter loaded: 完成回调
-    func asyncDuration(loaded: @escaping (CMTime)->()) {
+    func asyncDuration(loaded: @escaping (CMTime) -> (Void)) {
         let formatsKeys = "availableDuration"
         loadValuesAsynchronously(forKeys: [formatsKeys]) { [weak self] in
             guard let self = self else { return }
