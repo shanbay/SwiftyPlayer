@@ -212,16 +212,8 @@ class PlayerEventProducer: NSObject, EventProducer {
                 let duration = currentItem.duration
                 eventListener?.onEvent(PlayerEvent.loadedDuration(duration: duration), generateBy: self)
                 
-                let formatsKeys = "availableMetadataFormats"
-                currentItem.asset.loadValuesAsynchronously(forKeys: [formatsKeys]) {
-                    var error: NSError? = nil
-                    let status = currentItem.asset.statusOfValue(forKey: formatsKeys, error: &error)
-                    if status == .loaded {
-                        for format in currentItem.asset.availableMetadataFormats {
-                            let metadata = currentItem.asset.metadata(forFormat: format)
-                            eventListener?.onEvent(PlayerEvent.loadedMetadata(metadata: metadata), generateBy: self)
-                        }
-                    }
+                currentItem.asset.asyncMetaData { metaData in
+                    eventListener?.onEvent(PlayerEvent.loadedMetadata(metadata: metaData), generateBy: self)
                 }
             }
         case .currentItemStatus:
@@ -237,11 +229,12 @@ class PlayerEventProducer: NSObject, EventProducer {
                 guard let self = self, player.status == .readyToPlay else { return }
                 eventListener?.onEvent(PlayerEvent.readyToPlay, generateBy: self)
 
-                let duration = currentItem.asset.duration
-                eventListener?.onEvent(PlayerEvent.loadedDuration(duration: duration), generateBy: self)
-
-                let metadata = currentItem.asset.metadata
-                eventListener?.onEvent(PlayerEvent.loadedMetadata(metadata: metadata), generateBy: self)
+                currentItem.asset.asyncDuration { duration in
+                    eventListener?.onEvent(PlayerEvent.loadedDuration(duration: duration), generateBy: self)
+                }
+                currentItem.asset.asyncMetaData { metaData in
+                    eventListener?.onEvent(PlayerEvent.loadedMetadata(metadata: metaData), generateBy: self)
+                }
             }
         case .loadedItemRanges:
             observation = player.observe(
