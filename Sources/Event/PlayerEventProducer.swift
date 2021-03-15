@@ -211,9 +211,10 @@ class PlayerEventProducer: NSObject, EventProducer {
                 guard let self = self else { return }
                 let duration = currentItem.duration
                 eventListener?.onEvent(PlayerEvent.loadedDuration(duration: duration), generateBy: self)
-
-                let metadata = currentItem.asset.metadata
-                eventListener?.onEvent(PlayerEvent.loadedMetadata(metadata: metadata), generateBy: self)
+                
+                currentItem.asset.asyncMetaData { metaData in
+                    eventListener?.onEvent(PlayerEvent.loadedMetadata(metadata: metaData), generateBy: self)
+                }
             }
         case .currentItemStatus:
             observation = player.observe(
@@ -228,11 +229,12 @@ class PlayerEventProducer: NSObject, EventProducer {
                 guard let self = self, player.status == .readyToPlay else { return }
                 eventListener?.onEvent(PlayerEvent.readyToPlay, generateBy: self)
 
-                let duration = currentItem.asset.duration
-                eventListener?.onEvent(PlayerEvent.loadedDuration(duration: duration), generateBy: self)
-
-                let metadata = currentItem.asset.metadata
-                eventListener?.onEvent(PlayerEvent.loadedMetadata(metadata: metadata), generateBy: self)
+                currentItem.asset.asyncDuration { duration in
+                    eventListener?.onEvent(PlayerEvent.loadedDuration(duration: duration), generateBy: self)
+                }
+                currentItem.asset.asyncMetaData { metaData in
+                    eventListener?.onEvent(PlayerEvent.loadedMetadata(metadata: metaData), generateBy: self)
+                }
             }
         case .loadedItemRanges:
             observation = player.observe(

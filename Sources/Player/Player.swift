@@ -72,11 +72,13 @@ public class Player: NSObject, EventListener {
                 // Stops the current player
                 player?.rate = 0
 
-                // Ensures the audio session got started.
-                do {
-                    try audioSession.setActive(true)
-                } catch {
-                    delegate?.player(self, setAudioSessionErrorOccured: error)
+                if !configurator.manageAudioSessionExternal { // 内部管理session
+                    // Ensures the audio session got started.
+                    do {
+                        try audioSession.setActive(true)
+                    } catch {
+                        delegate?.player(self, setAudioSessionErrorOccured: error)
+                    }
                 }
 
                 // Sets new state
@@ -255,6 +257,9 @@ public class Player: NSObject, EventListener {
     ///
     /// 默认播放队列中的下一个
     public var actionAtItemEnd: ActionAtItemEnd = .next
+    
+    /// player配置器
+    public var configurator: PlayerConfigurator = .default
 
     /// 定义了用户执行 seek 操作的行为
     ///

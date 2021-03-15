@@ -82,10 +82,12 @@ extension Player {
                 }
             }
         case .sessionMessedUp:
-            do {
-                try audioSession.setActive(true)
-            } catch {
-                delegate?.player(self, setAudioSessionErrorOccured: error)
+            if !configurator.manageAudioSessionExternal { // 内部管理session
+                do {
+                    try audioSession.setActive(true)
+                } catch {
+                    delegate?.player(self, setAudioSessionErrorOccured: error)
+                }
             }
             state = .stopped
             qualityAdjustmentEventProducer.interruptionCount += 1
