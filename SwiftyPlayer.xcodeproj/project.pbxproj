@@ -14,6 +14,8 @@
 		C458D7272564F88900E1E38F /* PlayerSpeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = C458D7262564F88900E1E38F /* PlayerSpeed.swift */; };
 		C458D72C2564F92D00E1E38F /* TimeInterval+Second.swift in Sources */ = {isa = PBXBuildFile; fileRef = C458D72B2564F92D00E1E38F /* TimeInterval+Second.swift */; };
 		C476643E25480BA800201DAD /* DispatchQueue+Safely.swift in Sources */ = {isa = PBXBuildFile; fileRef = C476643D25480BA800201DAD /* DispatchQueue+Safely.swift */; };
+		C4862B3126033E3A006E7C04 /* PlayerConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4862B3026033E3A006E7C04 /* PlayerConfigurator.swift */; };
+		C4862B3626033E9D006E7C04 /* AVAsset+Resource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4862B3526033E9D006E7C04 /* AVAsset+Resource.swift */; };
 		C4E9367D254157F9002C982D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E9367C254157F9002C982D /* AppDelegate.swift */; };
 		C4E9367F254157F9002C982D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E9367E254157F9002C982D /* SceneDelegate.swift */; };
 		C4E93681254157F9002C982D /* JustVideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E93680254157F9002C982D /* JustVideoPlayerViewController.swift */; };
@@ -90,6 +92,8 @@
 		C458D7262564F88900E1E38F /* PlayerSpeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSpeed.swift; sourceTree = "<group>"; };
 		C458D72B2564F92D00E1E38F /* TimeInterval+Second.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimeInterval+Second.swift"; sourceTree = "<group>"; };
 		C476643D25480BA800201DAD /* DispatchQueue+Safely.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+Safely.swift"; sourceTree = "<group>"; };
+		C4862B3026033E3A006E7C04 /* PlayerConfigurator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerConfigurator.swift; sourceTree = "<group>"; };
+		C4862B3526033E9D006E7C04 /* AVAsset+Resource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AVAsset+Resource.swift"; sourceTree = "<group>"; };
 		C4E9366E254157E3002C982D /* SwiftyPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftyPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4E9367A254157F8002C982D /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4E9367C254157F9002C982D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -277,6 +281,7 @@
 		C4E9380D25427584002C982D /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				C4862B3526033E9D006E7C04 /* AVAsset+Resource.swift */,
 				C4E9380E25427584002C982D /* Subtitle.swift */,
 				C4E9380F25427584002C982D /* URL+Offline.swift */,
 				C4E9381025427584002C982D /* CMTime+TimeIntervalValue.swift */,
@@ -317,6 +322,7 @@
 		C4E9382425427584002C982D /* Player */ = {
 			isa = PBXGroup;
 			children = (
+				C4862B3026033E3A006E7C04 /* PlayerConfigurator.swift */,
 				C4E9382525427584002C982D /* PlayerAudioSession.swift */,
 				C4E9382625427584002C982D /* Extension */,
 				C4E9383225427584002C982D /* VideoPlayerView.swift */,
@@ -517,6 +523,7 @@
 				C4E9384B25427585002C982D /* PlayerEventProducer.swift in Sources */,
 				C4E9384A25427585002C982D /* SeekEventProducer.swift in Sources */,
 				C4E9384325427585002C982D /* ResourceConvertible.swift in Sources */,
+				C4862B3626033E9D006E7C04 /* AVAsset+Resource.swift in Sources */,
 				C4E9383D25427585002C982D /* Subtitle.swift in Sources */,
 				C4E9383E25427585002C982D /* URL+Offline.swift in Sources */,
 				C4E9384F25427585002C982D /* PlayableItemEventProducer.swift in Sources */,
@@ -539,6 +546,7 @@
 				C4E9384E25427585002C982D /* RetryEventProducer.swift in Sources */,
 				C4E9385925427585002C982D /* Player+Queue.swift in Sources */,
 				C4E9384D25427585002C982D /* QualityAdjustmentEventProducer.swift in Sources */,
+				C4862B3126033E3A006E7C04 /* PlayerConfigurator.swift in Sources */,
 				C4E9384125427585002C982D /* URL+Scheme.swift in Sources */,
 				C4E9384625427585002C982D /* Playable.swift in Sources */,
 				C4E9384925427585002C982D /* EventProducer.swift in Sources */,

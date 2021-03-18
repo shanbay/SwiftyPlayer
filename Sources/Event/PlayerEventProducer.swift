@@ -211,7 +211,6 @@ class PlayerEventProducer: NSObject, EventProducer {
                 guard let self = self else { return }
                 let duration = currentItem.duration
                 eventListener?.onEvent(PlayerEvent.loadedDuration(duration: duration), generateBy: self)
-                
                 currentItem.asset.asyncMetaData { metaData in
                     eventListener?.onEvent(PlayerEvent.loadedMetadata(metadata: metaData), generateBy: self)
                 }
