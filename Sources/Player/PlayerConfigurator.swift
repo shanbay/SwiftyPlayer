@@ -12,14 +12,13 @@ public struct PlayerConfigurator {
     ///
     /// 默认内部管理 播放时设置
     public var manageAudioSessionExternal: Bool = false
-    
+
     /// public
     public init(manageAudioSessionExternal: Bool) {
         self.manageAudioSessionExternal = manageAudioSessionExternal
     }
-    
+
     private init() {}
-    
     /// default
-    public static var `default`: PlayerConfigurator = PlayerConfigurator()
+    public static var `default` = PlayerConfigurator()
 }

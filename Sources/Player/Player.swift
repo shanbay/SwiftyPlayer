@@ -257,7 +257,7 @@ public class Player: NSObject, EventListener {
     ///
     /// 默认播放队列中的下一个
     public var actionAtItemEnd: ActionAtItemEnd = .next
-    
+
     /// player配置器
     public var configurator: PlayerConfigurator = .default
 
