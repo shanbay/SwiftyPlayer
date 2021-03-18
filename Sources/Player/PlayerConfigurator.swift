@@ -20,5 +20,5 @@ public struct PlayerConfigurator {
 
     private init() {}
     /// default
-    public static var `default`: PlayerConfigurator = PlayerConfigurator()
+    public static var `default` = PlayerConfigurator()
 }
