@@ -14,6 +14,8 @@
 		C458D7272564F88900E1E38F /* PlayerSpeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = C458D7262564F88900E1E38F /* PlayerSpeed.swift */; };
 		C458D72C2564F92D00E1E38F /* TimeInterval+Second.swift in Sources */ = {isa = PBXBuildFile; fileRef = C458D72B2564F92D00E1E38F /* TimeInterval+Second.swift */; };
 		C476643E25480BA800201DAD /* DispatchQueue+Safely.swift in Sources */ = {isa = PBXBuildFile; fileRef = C476643D25480BA800201DAD /* DispatchQueue+Safely.swift */; };
+		C481D392260B296F00AFCBA5 /* SwiftyPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4E9366E254157E3002C982D /* SwiftyPlayer.framework */; };
+		C481D393260B296F00AFCBA5 /* SwiftyPlayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C4E9366E254157E3002C982D /* SwiftyPlayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C4862B3126033E3A006E7C04 /* PlayerConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4862B3026033E3A006E7C04 /* PlayerConfigurator.swift */; };
 		C4862B3626033E9D006E7C04 /* AVAsset+Resource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4862B3526033E9D006E7C04 /* AVAsset+Resource.swift */; };
 		C4E9367D254157F9002C982D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E9367C254157F9002C982D /* AppDelegate.swift */; };
@@ -32,7 +34,6 @@
 		C4E9376525415D98002C982D /* QualityAdjustmentEventProducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E9375B25415D98002C982D /* QualityAdjustmentEventProducerTests.swift */; };
 		C4E9376625415D98002C982D /* SubtitleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E9375C25415D98002C982D /* SubtitleTests.swift */; };
 		C4E9376725415D98002C982D /* Fakes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E9375D25415D98002C982D /* Fakes.swift */; };
-		C4E9380725426E79002C982D /* SwiftyPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4E9366E254157E3002C982D /* SwiftyPlayer.framework */; };
 		C4E9383D25427585002C982D /* Subtitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E9380E25427584002C982D /* Subtitle.swift */; };
 		C4E9383E25427585002C982D /* URL+Offline.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E9380F25427584002C982D /* URL+Offline.swift */; };
 		C4E9383F25427585002C982D /* CMTime+TimeIntervalValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E9381025427584002C982D /* CMTime+TimeIntervalValue.swift */; };
@@ -75,6 +76,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		C481D394260B296F00AFCBA5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C4E933CD25414C4F002C982D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C4E9366D254157E3002C982D;
+			remoteInfo = SwiftyPlayer;
+		};
 		C4E9374B25415D5B002C982D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C4E933CD25414C4F002C982D /* Project object */;
@@ -83,6 +91,20 @@
 			remoteInfo = Example;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C481D396260B296F00AFCBA5 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				C481D393260B296F00AFCBA5 /* SwiftyPlayer.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		C458D70F2564F70300E1E38F /* VideoPlayerControlViewController+Pip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "VideoPlayerControlViewController+Pip.swift"; sourceTree = "<group>"; };
@@ -169,7 +191,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C4E9380725426E79002C982D /* SwiftyPlayer.framework in Frameworks */,
+				C481D392260B296F00AFCBA5 /* SwiftyPlayer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -394,10 +416,12 @@
 				C4E93676254157F8002C982D /* Sources */,
 				C4E93677254157F8002C982D /* Frameworks */,
 				C4E93678254157F8002C982D /* Resources */,
+				C481D396260B296F00AFCBA5 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				C481D395260B296F00AFCBA5 /* PBXTargetDependency */,
 			);
 			name = Example;
 			productName = Example;
@@ -597,6 +621,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		C481D395260B296F00AFCBA5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C4E9366D254157E3002C982D /* SwiftyPlayer */;
+			targetProxy = C481D394260B296F00AFCBA5 /* PBXContainerItemProxy */;
+		};
 		C4E9374C25415D5B002C982D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C4E93679254157F8002C982D /* Example */;
@@ -832,6 +861,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;

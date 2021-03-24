@@ -35,8 +35,9 @@ class JustVideoPlayerViewController: UIViewController {
     private lazy var player: VideoPlayer = {
         let player = VideoPlayer()
         player.actionAtItemEnd = .pause()
-        player.setCategory(.playback)
+        player.setCategory(.playback, mode: .moviePlayback)
         player.videoPlayerView = videoPlayerView
+        player.isBackgroundPlaybackSupported = true
         return player
     }()
 

@@ -114,7 +114,7 @@ extension Player {
             }
             self.player?.seek(to: CMTime(timeInterval: event.positionTime)) { [weak self] success in
                 guard let self = self else { return }
-                if success {
+                if success && self.shouldResumePlaying {
                     self.player?.rate = self.rate
                     self.updateNowPlayingInfoCenter()
                 }
