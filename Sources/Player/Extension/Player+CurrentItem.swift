@@ -13,7 +13,8 @@ extension Player {
 
     /// 当前 `AVPlayerItem` 的播放进度
     public var currentItemProgression: TimeInterval? {
-        player?.currentItem?.currentTime().timeIntervalValue
+        guard player?.currentItem?.status == .readyToPlay else { return nil }
+        return player?.currentItem?.currentTime().timeIntervalValue
     }
 
     /// 当前 `AVPlayerItem` 的总时长
