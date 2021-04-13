@@ -20,6 +20,28 @@ public enum PlayerError: Error {
     case noItemConsideredPlayable
 }
 
+extension PlayerError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .maximumRetryCountHit: return "达到了最大重试次数"
+        case .foundationError: return "`AVPlayer` 播放报错"
+        case .itemNotConsideredPlayable: return "当前播放的 item 被认定为无法播放"
+        case .noItemConsideredPlayable: return "当前队列中没有可播放的 item"
+        }
+    }
+}
+
+extension PlayerError: CustomNSError {
+    public var errorCode: Int {
+        switch self {
+        case .maximumRetryCountHit: return 1
+        case .foundationError: return 2
+        case .itemNotConsideredPlayable: return 3
+        case .noItemConsideredPlayable: return 4
+        }
+    }
+}
+
 /// `PlayerState` 是 `Player` 可能的状态
 ///
 /// - buffering: 缓存中
