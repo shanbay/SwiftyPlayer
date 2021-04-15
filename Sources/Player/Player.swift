@@ -69,12 +69,10 @@ public class Player: NSObject, EventListener {
     public internal(set) var currentItem: PlayableItem? {
         didSet {
             if let currentItem = currentItem {
-                // Pause the current player
-                if state == .playing {
-                    pause()
-                }
+                // Stops the current player
+                player?.rate = 0
 
-                if !configurator.manageAudioSessionExternal { // 内部管理 session
+                if !configurator.manageAudioSessionExternal { // 内部管理session
                     // Ensures the audio session got started.
                     do {
                         try audioSession.setActive(true)
@@ -97,30 +95,32 @@ public class Player: NSObject, EventListener {
 
                 // Reset special state flags.
                 pausedForInterruption = false
-                let asset = AVAsset(url: resource.resourceURL)
-                let keys = DynamicAttribute.allCases.map { $0.key }
-                asset.loadValuesAsynchronously(forKeys: keys) { [weak self] in
-                    guard let self = self else { return }
-                    DispatchQueue.main.safeAsync {
-                        let playerItem = AVPlayerItem(asset: asset)
-                        playerItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithm(
-                            rawValue: self.audioTimePitchAlgorithm.rawValue
-                        )
-                        playerItem.preferredForwardBufferDuration = self.preferredForwardBufferDuration
-
-                        self.avPlayerItem = playerItem
-
-                        self.currentQuality = info.quality
-                        // 更新控制中心播放信息
-                        self.updateNowPlayingInfoCenter()
-
-                        // Calls delegate
-                        if oldValue != currentItem {
-                            self.delegate?.player(self, willStartPlaying: currentItem)
-                        }
-                        self.player?.rate = self.rate
+                let playerItem: AVPlayerItem
+                if let data = currentItem.data { // pre-load
+                    playerItem = AVPlayerItem(asset: data)
+                    if let currentItemDuration = currentItemDuration, currentItemDuration > 0 {
+                        delegate?.player(self, didFindDuration: currentItemDuration, for: currentItem)
                     }
+                } else {
+                    let asset = AVAsset(url: resource.resourceURL)
+                    playerItem = AVPlayerItem(asset: asset)
                 }
+                playerItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithm(
+                    rawValue: audioTimePitchAlgorithm.rawValue
+                )
+                playerItem.preferredForwardBufferDuration = preferredForwardBufferDuration
+
+                avPlayerItem = playerItem
+
+                currentQuality = info.quality
+                // 更新控制中心播放信息
+                updateNowPlayingInfoCenter()
+
+                // Calls delegate
+                if oldValue != currentItem {
+                    delegate?.player(self, willStartPlaying: currentItem)
+                }
+                player?.rate = rate
             } else {
                 stop()
             }
@@ -386,6 +386,29 @@ public class Player: NSObject, EventListener {
         )
     }
 
+    /// Preload specified `PlayableItme`
+    public func preload(item: PlayableItem) {
+        if item.data != nil {
+            return
+        }
+
+        let info = item.url(for: currentQuality)
+        guard let resource = info.resource else { return }
+
+        let asset = AVURLAsset(url: resource.resourceURL)
+        let keys = ["playable", "tracks"]
+        asset.loadValuesAsynchronously(forKeys: keys) {
+            for key in keys {
+                if case .failed = asset.statusOfValue(forKey: key, error: nil) {
+                    return
+                }
+            }
+            DispatchQueue.main.safeAsync {
+                item.data = asset
+            }
+        }
+    }
+
     /// 对于 `EventListener` 的实现，处理多种事件的监听
     ///
     /// - Parameters:
@@ -418,12 +441,10 @@ extension Player {
         if let item = currentItem {
             MPNowPlayingInfoCenter.default().update(
                 with: item,
+                duration: currentItemDuration,
                 progression: currentItemProgression,
                 playbackRate: rate
             )
-            player?.currentItem?.asset.loadDuration { (duration) in
-                MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPMediaItemPropertyPlaybackDuration] = duration
-            }
         }  else {
             MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
         }
