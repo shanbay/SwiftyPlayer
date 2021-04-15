@@ -8,7 +8,8 @@
 import MediaPlayer
 
 extension MPNowPlayingInfoCenter {
-    func update(with item: PlayableItem, progression: TimeInterval?, playbackRate: Float) {
+
+    func update(with item: PlayableItem, duration: TimeInterval?, progression: TimeInterval?, playbackRate: Float) {
         var info = [String: Any]()
         if let title = item.title {
             info[MPMediaItemPropertyTitle] = title
@@ -28,6 +29,9 @@ extension MPNowPlayingInfoCenter {
         if let artwork = item.artwork {
             info[MPMediaItemPropertyArtwork] = artwork
         }
+        if let duration = duration {
+            info[MPMediaItemPropertyPlaybackDuration] = duration
+        }
         if let progression = progression {
             info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = progression
         }
@@ -35,4 +39,5 @@ extension MPNowPlayingInfoCenter {
 
         nowPlayingInfo = info
     }
+
 }
